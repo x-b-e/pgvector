@@ -3,7 +3,8 @@
 ARG PG_MAJOR="13"
 ARG PG_TAG="13-13.3"
 
-FROM postgis/postgis:${PG_TAG}
+FROM postgis/postgis:13-3.3
+# FROM postgis/postgis:${PG_TAG}
 
 LABEL org.opencontainers.image.source "https://github.com/x-b-e/server-pg"
 LABEL org.opencontainers.image.description "XBE server postgres with postgis, pgvector"
