@@ -14,17 +14,28 @@ LABEL org.opencontainers.image.licenses "PostgreSQL License"
 # ENV PG_MAJOR=${PG_MAJOR}
 ENV PG_MAJOR=13
 
-COPY . /tmp/pgvector
-
 RUN apt-get update && \
-		apt-get install -y --no-install-recommends build-essential postgresql-server-dev-${PG_MAJOR} && \
-		cd /tmp/pgvector && \
-		make clean && \
-		make OPTFLAGS="" && \
-		make install && \
-		mkdir /usr/share/doc/pgvector && \
-		cp LICENSE README.md /usr/share/doc/pgvector && \
-		rm -r /tmp/pgvector && \
-		apt-get remove -y build-essential postgresql-server-dev-${PG_MAJOR} && \
-		apt-get autoremove -y && \
-		rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    postgresql-server-dev-all
+
+# Set the pgvector version
+ARG PGVECTOR_VERSION=0.4.1
+
+# Download and extract the pgvector release, build the extension, and install it
+RUN curl -L -o pgvector.tar.gz "https://github.com/pgvector/pgvector/archive/refs/tags/v${PGVECTOR_VERSION}.tar.gz" && \
+    tar -xzf pgvector.tar.gz && \
+    cd "pgvector-${PGVECTOR_VERSION}" && \
+    make && \
+    make install
+
+# Clean up build dependencies and temporary files
+RUN apt-get remove -y \
+    build-essential \
+    curl \
+    postgresql-server-dev-all && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /pgvector.tar.gz /pgvector-${PGVECTOR_VERSION}
