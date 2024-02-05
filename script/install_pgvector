@@ -80,6 +80,7 @@ case "${1:-}" in
   install) install ;;
   *)
     abort=1
+    error "Unknown command: $*"
     help
   ;;
 esac
