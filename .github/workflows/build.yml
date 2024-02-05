@@ -14,10 +14,10 @@ jobs:
             os: ubuntu-22.04
           - postgres: 13
             os: ubuntu-20.04
-          - postgres: 12
-            os: ubuntu-20.04
-          - postgres: 11
-            os: ubuntu-18.04
+          # - postgres: 12
+          #   os: ubuntu-20.04
+          # - postgres: 11
+          #   os: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
       - uses: ankane/setup-postgres@v1

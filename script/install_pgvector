@@ -1,0 +1,90 @@
+#!/bin/bash
+#
+# Usage:
+#  script/pgvector install PGVECTOR_VERSION PGVECTOR_BUILD_DIR
+#  script/pgvector help
+
+set -euo pipefail
+IFS=$'\n\t'
+unset CDPATH
+
+# Influenced by https://dev.to/thiht/shell-scripts-matter
+# And see https://github.com/bf4/Notes/wiki/Shell-Scripting
+
+# Log errors, if any, bash pseudo-signal: ERR
+# Usage:
+#   trap 'finish_error $LINENO' ERR
+finish_error()  {
+  errcode=$?
+  echo "       END ERROR Running script: ${0##*/}:$1: exited with '${errcode}'." >&2
+}
+
+trap 'finish_error $LINENO' ERR
+
+readonly DEBUG="${DEBUG:-}"
+# shellcheck disable=SC2155
+readonly RED="$(tput setaf 1)"
+# shellcheck disable=SC2155
+readonly YELLOW="$(tput setaf 3)"
+# shellcheck disable=SC2155
+readonly NORMAL="$(tput sgr0)"
+readonly TIMEZONE="${TZ:-America/Chicago}"
+logstamp() { printf "[%s]" "$(TZ="'${TIMEZONE}'" date +'%Y-%m-%d %H:%M:%S')" ; }
+topic()    { echo "-----> $(logstamp) $*" >&2 ; }
+info()     { echo "       $*" >&2 ; }
+debug()    { if [ "$DEBUG" = "true" ]; then echo -e "[DEBUG]       $*" >&2 ; fi ; }
+indent()   { sed -u 's/^/       /' ; } # it always runs on linux. on darwin is 'sed -l'
+warn()     { info "${YELLOW}WARNING - ${*}${NORMAL}" ; }
+error()    { info "${RED}ERROR - ${*}${NORMAL}" ;  }
+fail()     { error "$*" ; exit 1 ; }
+
+abort=0
+help() {
+  sed -ne '/^#/!q;s/.\{1,2\}//;1d;p' < "$0" >&$((abort+1))
+  exit "$abort"
+}
+
+# $1 is the PGVECTOR_VERSION
+readonly PGVECTOR_VERSION="${2:-}"
+readonly PGVECTOR_BUILD_DIR="${3:-pgvector-${PGVECTOR_VERSION}}"
+if [ "$DEBUG" = "true" ]; then set -x ; fi
+
+validate_env_vars() {
+  if [ -z "${PGVECTOR_VERSION}" ]; then
+    info "PGVECTOR_VERSION not set"
+    exit 1
+  fi
+  if [ -z "${PGVECTOR_BUILD_DIR}" ]; then
+    info "PGVECTOR_BUILD_DIR not set"
+    exit 1
+  fi
+}
+
+run_cmd() {
+  local cmd
+  cmd="$*"
+  debug "cmd: $cmd"
+  eval "$cmd"
+}
+
+install() {
+  # Download and extract the pgvector release, build the extension, and install it
+  mkdir "${PGVECTOR_BUILD_DIR}"
+  (
+    cd "${PGVECTOR_BUILD_DIR}"
+    curl -L -o pgvector.tar.gz "https://github.com/pgvector/pgvector/archive/refs/tags/v${PGVECTOR_VERSION}.tar.gz" && \
+        tar -xzf pgvector.tar.gz && \
+        cd "pgvector-${PGVECTOR_VERSION}" && \
+        make && \
+        make install
+  )
+}
+
+case "${1:-}" in
+  help) help ;;
+  install) install ;;
+  *)
+    abort=1
+    help
+  ;;
+esac
