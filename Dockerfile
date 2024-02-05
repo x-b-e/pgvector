@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 ARG PG_MAJOR="13"
-ARG PG_IMAGE="postgis/postgis:13-13.3"
+# see https://hub.docker.com/r/postgis/postgis for valid images
+ARG PG_IMAGE="postgis/postgis:13-3.4"
 
 FROM $PG_IMAGE
 

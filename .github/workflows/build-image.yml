@@ -34,6 +34,6 @@ jobs:
           tags: ghcr.io/x-b-e/server-pg:13
           build-args: |
             PG_MAJOR=13
-            PG_IMAGE=postgis/postgis:13-13.3
+            PG_IMAGE=postgis/postgis:13-3.4
           # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=XBE server pg
           # cache-from: ghcr.io/x-b-e/server-pg
