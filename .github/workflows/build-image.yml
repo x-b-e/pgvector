@@ -33,7 +33,7 @@ jobs:
             - linux/amd64
             - linux/arm64/v8
           push: true
-          tags: ghcr.io/x-b-e/server-pg:latest
+          tags: ghcr.io/x-b-e/server-pg:13
           build-args: |
             PG_MAJOR=13
             PG_TAG=13-13.3
