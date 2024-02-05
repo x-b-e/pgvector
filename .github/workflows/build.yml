@@ -25,7 +25,7 @@ jobs:
           postgres-version: ${{ matrix.postgres }}
           dev-files: true
       - run: |
-          script/install_pgvector install 0.4.1 pgvector
+          sudo script/install_pgvector install 0.4.1 pgvector
   mac:
     runs-on: macos-latest
     if: ${{ !startsWith(github.ref_name, 'windows') }}
