@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
 ARG PG_MAJOR="13"
-ARG PG_TAG="13-13.3"
+ARG PG_IMAGE="postgis/postgis:13-13.3"
 
-FROM postgis/postgis:${PG_TAG}
+FROM $PG_IMAGE
 
 LABEL org.opencontainers.image.source "https://github.com/x-b-e/pgvector"
 LABEL org.opencontainers.image.description "XBE server postgres with postgis, pgvector"
@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.licenses "PostgreSQL License"
 
 # ARG PG_MAJOR
 # ENV PG_MAJOR=${PG_MAJOR}
-ENV PG_MAJOR=13
+# ENV PG_MAJOR=13
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
