@@ -22,13 +22,13 @@ RUN apt-get update && \
 
 # Set the pgvector version
 ARG PGVECTOR_VERSION=0.4.1
+ARG PGVECTOR_BUILD_DIR="pgvector"
+
+COPY scripts/install_pgvector /tmp/install_pgvector
 
 # Download and extract the pgvector release, build the extension, and install it
-RUN curl -L -o pgvector.tar.gz "https://github.com/pgvector/pgvector/archive/refs/tags/v${PGVECTOR_VERSION}.tar.gz" && \
-    tar -xzf pgvector.tar.gz && \
-    cd "pgvector-${PGVECTOR_VERSION}" && \
-    make && \
-    make install
+RUN /tmp/install_pgvector install "${PGVECTOR_VERSION}" "${PGVECTOR_BUILD_DIR}" && \
+    rm -rf /tmp/*
 
 # Clean up build dependencies and temporary files
 RUN apt-get remove -y \
@@ -38,4 +38,4 @@ RUN apt-get remove -y \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /pgvector.tar.gz /pgvector-${PGVECTOR_VERSION}
+    rm -rf "$PGVECTOR_BUILD_DIR"
