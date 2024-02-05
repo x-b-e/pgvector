@@ -23,7 +23,7 @@ RUN apt-get update && \
 ARG PGVECTOR_VERSION=0.4.1
 ARG PGVECTOR_BUILD_DIR="pgvector"
 
-COPY scripts/install_pgvector /tmp/install_pgvector
+COPY script/install_pgvector /tmp/install_pgvector
 
 # Download and extract the pgvector release, build the extension, and install it
 RUN /tmp/install_pgvector install "${PGVECTOR_VERSION}" "${PGVECTOR_BUILD_DIR}" && \
