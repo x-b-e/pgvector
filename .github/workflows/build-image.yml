@@ -29,9 +29,7 @@ jobs:
           context: .
           file: ./Dockerfile
           # platforms: ${{ matrix.platforms }}
-          platforms:
-            - linux/amd64
-            - linux/arm64/v8
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ghcr.io/x-b-e/server-pg:13
           build-args: |
