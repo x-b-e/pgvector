@@ -2,11 +2,13 @@
 
 ARG PG_MAJOR="15"
 # see https://hub.docker.com/r/postgis/postgis for valid images
-ARG PG_TAG="15-3.4""
+ARG PG_IMAGE="postgis/postgis:15-3.4"
 
 FROM $PG_IMAGE
 
-ARG PG_MAJOR
+# ARG PG_MAJOR
+# ENV PG_MAJOR=${PG_MAJOR}
+# ENV PG_MAJOR=15
 
 LABEL org.opencontainers.image.source "https://github.com/x-b-e/pgvector"
 LABEL org.opencontainers.image.description "XBE server postgres with postgis, pgvector"
