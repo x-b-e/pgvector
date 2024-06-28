@@ -31,9 +31,9 @@ jobs:
           # platforms: ${{ matrix.platforms }}
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/x-b-e/server-pg:latest
+          tags: ghcr.io/x-b-e/server-pg:15
           build-args: |
-            PG_MAJOR=13
-            PG_TAG=13-13.3
+            PG_MAJOR="15"
+            PG_TAG="15-3.4""
           # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=XBE server pg
           # cache-from: ghcr.io/x-b-e/server-pg
